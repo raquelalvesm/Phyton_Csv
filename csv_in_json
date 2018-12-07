@@ -1,0 +1,52 @@
+from flask import Flask
+from flask import jsonify
+from flask_restplus import Resource, Api
+import json
+import  csv
+from collections import OrderedDict
+
+
+app = Flask(__name__)
+
+@app.route("/")
+
+
+def app_csv():
+
+    with open('bi_text.csv', 'r') as arq:
+        ler = csv.reader(arq, delimiter=',')
+        lines = list(ler)
+        # print(lines)
+
+        cont=0
+        procs,arqs, hash=[], [], []
+
+        d1= OrderedDict()
+        d2= OrderedDict()
+        d3= OrderedDict()
+
+        for line in lines:
+
+            if line[0]  not in procs:
+                procs.append(line[0])
+                d1[line[0]] ={}
+            d1[line[0]][line[1]] = line[2]
+            dg= (dict(d1))
+
+
+            if line[3] not in arqs:
+                arqs.append (line[3])
+                d2[line[3]] = {}
+            d2[line[3]] = line[4]
+            df = (dict (d2))
+
+            if line[15] not in hash:
+                arqs.append (line[13])
+                d3[line[15]] = {}
+            d3[line[15]] = line[13]
+            dh = (dict (d3))
+
+        return jsonify(dg, df, dh)
+
+if __name__ == "__main__":
+    app.run()
